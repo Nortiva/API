@@ -1,2 +1,1 @@
-# API
-API oficial da Nortiva responsável por integrar o site, aplicações e o Discord, centralizando dados, automações e serviços em uma única plataforma.
+<img width="1280" height="720" alt="nortiva patner + discord" src="https://github.com/user-attachments/assets/ba887c41-6e84-4b46-a159-59ddc48943fd" />
