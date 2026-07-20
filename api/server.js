@@ -2,35 +2,37 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
+const serverless = require("serverless-http"); // Importante para o Serverless
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Servir arquivos estáticos do dashboard
-app.use(express.static(path.join(__dirname, "..")));
+// Caminho absoluto correto para o data.json funcionar na Netlify
+const file = path.join(__dirname, "../../api/data.json");
 
-const file = "./data.json";
-
-// Ler dados
+// Rotas mantidas iguaizinhas às suas
 app.get("/api/dashboard", (req, res) => {
-    const data = JSON.parse(fs.readFileSync(file));
-    res.json(data);
+    try {
+        const data = JSON.parse(fs.readFileSync(file, "utf8"));
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao ler arquivo de dados" });
+    }
 });
 
-// Atualizar dados
 app.put("/api/dashboard", (req, res) => {
-    fs.writeFileSync(file, JSON.stringify(req.body, null, 2));
-    res.json({
-        success: true,
-        message: "Dados atualizados!"
-    });
+    try {
+        fs.writeFileSync(file, JSON.stringify(req.body, null, 2));
+        res.json({
+            success: true,
+            message: "Dados atualizados!"
+        });
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao salvar dados" });
+    }
 });
 
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "index.html"));
-});
-
-app.listen(3000, () => {
-    console.log("🚀 API rodando em http://localhost:3000");
-});
+// Em vez de usar app.listen(3000), exportamos para a Netlify controlar
+module.exports.handler = serverless(app);
