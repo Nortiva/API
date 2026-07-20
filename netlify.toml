@@ -1,0 +1,7 @@
+[build]
+  command = "# Sem comando de build necessário"
+  publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
